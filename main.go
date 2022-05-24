@@ -17,7 +17,10 @@ func main() {
   })
 
 	router.GET("/users", controllers.FindUsers)
+	router.GET("/users/:id", controllers.FindUser)
 	router.POST("/users", controllers.CreateUser)
+	router.PATCH("/users/:id", controllers.UpdateUser)
+	router.DELETE("/users/:id", controllers.DeleteUser)
 
 	router.GET("/messages", controllers.FindMessages)
 	router.POST("/messages", controllers.CreateMessage)
