@@ -8,3 +8,6 @@
 # Testing
 *.test
 *.tmp
+
+# SQLITE File
+*.db
