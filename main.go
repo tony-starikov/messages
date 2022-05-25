@@ -23,7 +23,10 @@ func main() {
 	router.DELETE("/users/:id", controllers.DeleteUser)
 
 	router.GET("/messages", controllers.FindMessages)
+	router.GET("/messages/:id", controllers.FindMessage)
 	router.POST("/messages", controllers.CreateMessage)
+	router.PATCH("/messages/:id", controllers.UpdateMessage)
+	router.DELETE("/messages/:id", controllers.DeleteMessage)
 
   router.Run()
 }

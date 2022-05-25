@@ -13,6 +13,10 @@ type CreateMessageInput struct {
 	Message  string `json:"message" binding:"required"`
 }
 
+type UpdateMessageInput struct {
+	Message  string `json:"message"`
+}
+
 // GET /messages
 // Get all messages
 func FindMessages(c *gin.Context) {
@@ -38,4 +42,58 @@ func CreateMessage(c *gin.Context) {
   models.DB.Create(&message)
 
   c.JSON(http.StatusOK, gin.H{"data": message})
+}
+
+
+// GET /messages/:id
+// Find a messages
+func FindMessage(c *gin.Context) {  // Get model if exist
+  var message models.Message
+
+  if err := models.DB.Where("id = ?", c.Param("id")).First(&message).Error; err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+    return
+  }
+
+  c.JSON(http.StatusOK, gin.H{"data": message})
+}
+
+// PATCH /message/:id
+// Update a message
+func UpdateMessage(c *gin.Context) {
+  // Get model if exist
+  var message models.Message
+
+  if err := models.DB.Where("id = ?", c.Param("id")).First(&message).Error; err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+    return
+  }
+
+  // Validate input
+  var input UpdateMessageInput
+  if err := c.ShouldBindJSON(&input); err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    return
+  }
+
+  // Update attributes with `map`
+  // models.DB.Model(&user).Updates(map[string]interface{}{"name": "hello", "age": 18, "active": false})
+  models.DB.Model(&message).Update("Message", input.Message)
+
+  c.JSON(http.StatusOK, gin.H{"data": message})
+}
+
+// DELETE /message/:id
+// Delete a message
+func DeleteMessage(c *gin.Context) {
+  // Get model if exist
+  var message models.Message
+  if err := models.DB.Where("id = ?", c.Param("id")).First(&message).Error; err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+    return
+  }
+
+  models.DB.Delete(&message)
+
+  c.JSON(http.StatusOK, gin.H{"data": true})
 }

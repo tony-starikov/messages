@@ -73,6 +73,8 @@ func UpdateUser(c *gin.Context) {
     return
   }
 
+  // Update attributes with `map`
+  // models.DB.Model(&user).Updates(map[string]interface{}{"name": "hello", "age": 18, "active": false})
   models.DB.Model(&user).Update("Name", input.Name)
 
   c.JSON(http.StatusOK, gin.H{"data": user})
